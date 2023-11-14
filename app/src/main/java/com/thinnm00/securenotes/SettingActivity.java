@@ -50,18 +50,15 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        biometricFingerPrintSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Show biometric prompt
-                    showBiometricPrompt();
-                    sharedPreferences.edit().putBoolean(KEY_BIOMETRIC_FINGERPRINT, true).apply();
-                } else {
-                    // Disable the setting
-                    enableSetting(false);
-                    sharedPreferences.edit().putBoolean(KEY_BIOMETRIC_FINGERPRINT, false).apply();
-                }
+        biometricFingerPrintSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Show biometric prompt
+                showBiometricPrompt();
+                sharedPreferences.edit().putBoolean(KEY_BIOMETRIC_FINGERPRINT, true).apply();
+            } else {
+                // Disable the setting
+                enableSetting(false);
+                sharedPreferences.edit().putBoolean(KEY_BIOMETRIC_FINGERPRINT, false).apply();
             }
         });
     }

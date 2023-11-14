@@ -29,9 +29,6 @@ public class Note implements Serializable {
     @ColumnInfo(name = "is_trash")
     private boolean isTrash;
 
-//    @ColumnInfo(name = "bg_hex_color_code")
-//    private int bgHexColorCode;
-
     public int getId() {
         return id;
     }
@@ -85,7 +82,6 @@ public class Note implements Serializable {
         this.title = title;
         this.content = content;
         this.createDate = createDate;
-//        this.bgHexColorCode = bgHexColorCode;
         this.isPinned = isPinned;
         this.isTrash = isTrash;
     }

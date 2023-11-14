@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                 startActivityForResult(intent, REQUEST_ADD_NOTE);
                                 break;
                             case R.id.action_setting:
-
+                                Toast.makeText(MainActivity.this, "ok1", Toast.LENGTH_SHORT).show();
                                 Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
                                 startActivity(intentSetting);
                                 break;

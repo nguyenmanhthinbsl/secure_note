@@ -22,10 +22,9 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 public class AuthActivity extends AppCompatActivity {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
-    private BiometricPrompt.PromptInfo promptInfo;
     private SharedPreferences sharedPreferences;
     private static final String PREF_NAME = "BiometricsSetting";
-    public String KEY_BIOMETRIC_FINGERPRINT = "isEnableFingerPrint";
+    private final static String KEY_BIOMETRIC_FINGERPRINT = "isEnableFingerPrint";
     public String KEY_BIOMETRIC_FACEID = "isEnableFaceId";
     boolean isEnableBiometric;
 
@@ -34,7 +33,6 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        //Toast.makeText(this, "setting: biometric "  + (isEnableBiometric?"true":"false"), Toast.LENGTH_SHORT).show();
 
         //if not setting
         if (!sharedPreferences.contains(KEY_BIOMETRIC_FINGERPRINT)) {
@@ -44,8 +42,6 @@ public class AuthActivity extends AppCompatActivity {
         }
 
         isEnableBiometric = sharedPreferences.getBoolean(KEY_BIOMETRIC_FINGERPRINT, false);
-        //Toast.makeText(this, "setting: biometric "  + (isEnableBiometric?"true":"false"), Toast.LENGTH_SHORT).show();
-
         //if setting but not enable
         if (!isEnableBiometric) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -62,6 +58,9 @@ public class AuthActivity extends AppCompatActivity {
                     Toast.makeText(this, "Hardware device not support biometric!", Toast.LENGTH_SHORT).show();
                     break;
                 case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                    Toast.makeText(this, "Biometrics not available!", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
                     Toast.makeText(this, "Biometrics not available!", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -93,11 +92,11 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("please authenticate to access app!")
-                .setConfirmationRequired(true)
-                .setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
-                .build();
+//        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+//                .setTitle("please authenticate to access app!")
+//                .setConfirmationRequired(true)
+//                .setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
+//                .build();
 
         showBiometricPrompt();
 

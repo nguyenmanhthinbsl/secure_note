@@ -19,8 +19,9 @@ import java.util.Random;
 
 public class AddEditNote extends AppCompatActivity {
 
-    final String MSG_EMPTY_TITLE = "Title không được để trống!";
-    EditText edtTitle, edtContent;
+    private static final String MSG_EMPTY_TITLE = "Title không được để trống!";
+    EditText edtTitle;
+    EditText edtContent;
     ImageView imgviewSave;
     Note note;
 
@@ -47,42 +48,39 @@ public class AddEditNote extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        imgviewSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String title = edtTitle.getText().toString().trim();
-                String content = edtContent.getText().toString().trim();
+        imgviewSave.setOnClickListener(view -> {
+            String title = edtTitle.getText().toString().trim();
+            String content = edtContent.getText().toString().trim();
 
-                if (title.isEmpty()) {
-                    Toast.makeText(AddEditNote.this, MSG_EMPTY_TITLE, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            if (title.isEmpty()) {
+                Toast.makeText(AddEditNote.this, MSG_EMPTY_TITLE, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                if (isEditNoteActivity) {
-                    note.setTitle(title);
-                    note.setContent(content);
-                    Intent intent = new Intent();
-                    intent.putExtra("note", note);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
-                Date date = new Date();
-
-                note = new Note();
+            if (isEditNoteActivity) {
                 note.setTitle(title);
                 note.setContent(content);
-                note.setCreateDate(formatter.format(date));
-                note.setTrash(false);
-
                 Intent intent = new Intent();
                 intent.putExtra("note", note);
-                setResult(Activity.RESULT_OK, intent);
-
+                setResult(RESULT_OK, intent);
                 finish();
-
             }
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
+            Date date = new Date();
+
+            note = new Note();
+            note.setTitle(title);
+            note.setContent(content);
+            note.setCreateDate(formatter.format(date));
+            note.setTrash(false);
+
+            Intent intent = new Intent();
+            intent.putExtra("note", note);
+            setResult(Activity.RESULT_OK, intent);
+
+            finish();
+
         });
 
     }
