@@ -3,5 +3,5 @@
     <item android:id="@+id/pin"
           android:title="@string/pin"/>
     <item android:id="@+id/movetotrash"
-          android:title="@string/movetotrash"/>
+          android:title="@string/move_to_trash"/>
 </menu>

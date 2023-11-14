@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">SecureNotes</string>
     <string name="title">Title</string>
-    <string name="notes">Notes.</string>
-    <string name="content">note content ...</string>
-    <string name="addnote">Add new note.</string>
+    <string name="notes">Notes</string>
+    <string name="content">note content</string>
+    <string name="add_note">New note</string>
     <string name="pin">Pin/Unpin</string>
-    <string name="movetotrash">Move to trash</string>
+    <string name="move_to_trash">Move to trash</string>
 
     <string name="date">Date.</string>
 
-    <string name="search_hint">search here...</string>
+    <string name="search_hint">Search here</string>
 
     <string name="title_home">Home</string>
     <string name="title_add">Add</string>
     <string name="title_setting">Setting</string>
+    <string name="back_arrow">Back</string>
+    <!--    <string name="Setting">Back</string>-->
 </resources>

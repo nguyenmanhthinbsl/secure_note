@@ -9,18 +9,23 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="grey">#242B2E</color>
+    <color name="search_view_color">#C5E7F5</color>
 
-    <color name="bgcolor1">#4CBAEA</color>
-    <color name="bgcolor2">#BDE4F4</color>
-    <color name="bgcolor3">#F9FAF6</color>
+    <color name="bgcolor1">#B25DDF</color>
+    <color name="bgcolor2">#53DF2D</color>
+    <color name="bgcolor3">#D5ED8E</color>
     <color name="bgcolor4">#F13737</color>
-    <color name="bgcolor5">#97F806</color>
+    <color name="bgcolor5">#455F5E</color>
     <color name="bgcolor6">#EFD468</color>
-    <color name="bgcolor7">#8440EA</color>
+    <color name="bgcolor7">#F42EC9</color>
 
     <color name="colorPrimary">#7b4bff</color>
     <color name="colorPrimaryDark">#6539ba</color>
     <color name="colorAccent">#FF4081</color>
     <color name="bgBottomNavigation">#fe485a</color>
+
+    <color name="tint">#F1C84E</color>
+
+    <color name="app_material_color">#03A9F4</color>
 
 </resources>
