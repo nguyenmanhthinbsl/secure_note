@@ -1,11 +1,16 @@
 package com.thinnm00.securenotes;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.thinnm00.securenotes.adapter.NoteListAdapter;
 import com.thinnm00.securenotes.databases.RoomDatabase;
@@ -25,13 +31,17 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    private int backPressedCount = 0;
+    public final int RECYCLER_SPAN_COUNT = 1;
+    private static final int REQUEST_ADD_NOTE = 101;
+    private static final int REQUEST_EDIT_NOTE = 102;
     RecyclerView recyclerView;
     NoteListAdapter noteListAdapter;
     List<Note> noteList = new ArrayList<>();
     RoomDatabase database;
-    FloatingActionButton floatingActionButtonAdd;
     SearchView searchView;
     Note longClickNote;
+    BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +49,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycle_home);
-        floatingActionButtonAdd = findViewById(R.id.float_add);
         searchView = findViewById(R.id.search_view);
 
         database = RoomDatabase.getInstance(this);
         noteList = database.noteDAO().getAll();
-        Log.e("DEBUG:", String.valueOf("current size: " + noteList.size()));
-
         updateRecycle(noteList);
-
-        floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddEditNote.class);
-                startActivityForResult(intent, 101);
-            }
-        });
+        setupBottomNavigationBar();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -70,55 +70,91 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         });
     }
 
-    private void filter(String newText) {
+
+    private void setupBottomNavigationBar() {
+        bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        // Handle navigation item clicks here
+                        switch (item.getItemId()) {
+                            case R.id.action_home:
+                                reloadMain();
+                                break;
+                            case R.id.action_add:
+                                Intent intent = new Intent(MainActivity.this, AddEditNote.class);
+                                startActivityForResult(intent, REQUEST_ADD_NOTE);
+                                break;
+                            case R.id.action_setting:
+
+                                Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
+                                startActivity(intentSetting);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+        // Set the default selected item
+        bottomNav.setSelectedItemId(R.id.action_home);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void reloadMain() {
+        noteList.clear();
+        noteList.addAll(database.noteDAO().getAll());
+        noteListAdapter.notifyDataSetChanged();
+    }
+
+    private void filter(String keySearch) {
         List<Note> filteredNoteList = new ArrayList<>();
+        /*
+        if search only space -> trim
+         */
+        if (keySearch.trim().isEmpty()) {
+            noteListAdapter.fiteredNoteList(noteList);
+            return;
+        }
         for (Note note : noteList) {
-            if (note.getTitle().toLowerCase().contains(newText.toLowerCase())
-                    || note.getContent().toLowerCase().contains(newText.toLowerCase())) {
+            if (note.getTitle().toLowerCase().contains(keySearch.toLowerCase())
+                    || note.getContent().toLowerCase().contains(keySearch.toLowerCase())) {
                 filteredNoteList.add(note);
             }
         }
-
         noteListAdapter.fiteredNoteList(filteredNoteList);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Deprecated
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 101) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 Note note = (Note) data.getSerializableExtra("note");
                 database.noteDAO().insertNote(note);
 
                 //sync data
-                noteList.clear();
-                noteList.addAll(database.noteDAO().getAll());
-
-                Log.e("DEBUG:", String.valueOf("after add 1, size: " + noteList.size()));
-                noteListAdapter.notifyDataSetChanged();
+                reloadMain();
             }
         }
 
         if (requestCode == 102) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 Note note = (Note) data.getSerializableExtra("note");
                 database.noteDAO().update(note.getId(), note.getTitle(), note.getContent());
 
-                //sync data
-                noteList.clear();
-                noteList.addAll(database.noteDAO().getAll());
-
-                Log.e("DEBUG:", String.valueOf("after edit note success, size: " + noteList.size()));
-                noteListAdapter.notifyDataSetChanged();
+                //sync data again
+                reloadMain();
             }
         }
     }
 
     private void updateRecycle(List<Note> noteList) {
-
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(RECYCLER_SPAN_COUNT, LinearLayoutManager.VERTICAL));
         noteListAdapter = new NoteListAdapter(MainActivity.this, noteList, noteClickListener);
         recyclerView.setAdapter(noteListAdapter);
     }
@@ -128,14 +164,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         public void onClick(Note note) {
             Intent intent = new Intent(MainActivity.this, AddEditNote.class);
             intent.putExtra("edit_note", note);
-            startActivityForResult(intent, 102);
+            startActivityForResult(intent, REQUEST_EDIT_NOTE);
         }
 
         @Override
         public void onLongClicK(Note note, CardView cardView) {
-            longClickNote = new Note();
             longClickNote = note;
-
             showPopupMenu(cardView);
         }
     };
@@ -147,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popupMenu.show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.pin) {
@@ -164,11 +199,26 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         } else if (item.getItemId() == R.id.movetotrash) {
             database.noteDAO().moveToTrash(longClickNote.getId());
             Toast.makeText(MainActivity.this, "Move to trash success!", Toast.LENGTH_SHORT).show();
-            noteList.clear();
-            noteList.addAll(database.noteDAO().getAll());
-            noteListAdapter.notifyDataSetChanged();
+            reloadMain();
         }
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (backPressedCount == 1) {
+            finish();
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            backPressedCount++;
+            // Thiết lập một thời gian để reset biến đếm sau mỗi lần nhấn nút "Back"
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backPressedCount = 0;
+                }
+            }, 2000); // 2 giây
+        }
+    }
 }

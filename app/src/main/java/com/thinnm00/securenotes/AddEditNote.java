@@ -12,12 +12,14 @@ import android.os.Bundle;
 import com.thinnm00.securenotes.models.Note;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 public class AddEditNote extends AppCompatActivity {
 
-    final String MSG_EMPTY_TITLE = "title khong duoc de trong!";
-
+    final String MSG_EMPTY_TITLE = "Title không được để trống!";
     EditText edtTitle, edtContent;
     ImageView imgviewSave;
     Note note;
@@ -83,6 +85,6 @@ public class AddEditNote extends AppCompatActivity {
             }
         });
 
-
     }
+
 }

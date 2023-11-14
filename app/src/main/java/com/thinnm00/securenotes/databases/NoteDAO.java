@@ -16,6 +16,9 @@ public interface NoteDAO {
     @Query("UPDATE tb_note SET title= :title, content= :content WHERE id= :id")
     void update(int id, String title, String content);
 
+//    @Query("UPDATE tb_note SET bg_hex_color_code= :bgHexColorCode WHERE id= :id")
+//    void updateBgHexColorCode(int id, String bgHexColorCode);
+
     // not suggest use
     @Delete
     void delete(Note note);

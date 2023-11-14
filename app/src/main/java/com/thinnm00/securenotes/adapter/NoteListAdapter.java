@@ -40,9 +40,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     Context context;
     List<Note> listNote;
-
     NoteClickListener listener;
-
+    Random random;
     public NoteListAdapter(Context context, List<Note> listNote, NoteClickListener listener) {
         this.context = context;
         this.listNote = listNote;
@@ -73,26 +72,26 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             holder.imgv_pin.setImageResource(0);
         }
 
-        int noteBackgroundColor = getRandomNoteBackgroundColor();
-        holder.container.setCardBackgroundColor(holder.itemView.getResources().getColor(noteBackgroundColor, null));
+        holder.container.setCardBackgroundColor(holder.itemView.getResources().getColor(getRandomNoteBackgroundColor(), null));
 
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onClick(listNote.get(holder.getAdapterPosition()));
+        holder.container.setOnClickListener(view -> listener.onClick(listNote.get(holder.getAdapterPosition())));
 
-            }
-        });
-
-        holder.container.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                listener.onLongClicK(listNote.get(holder.getAdapterPosition()), holder.container);
-                return true;
-            }
+        holder.container.setOnLongClickListener(view -> {
+            listener.onLongClicK(listNote.get(holder.getAdapterPosition()), holder.container);
+            return true;
         });
     }
 
+
+    @Override
+    public int getItemCount() {
+        return listNote.size();
+    }
+
+    public void fiteredNoteList(List<Note> fiteredNoteList) {
+        listNote = fiteredNoteList;
+        notifyDataSetChanged();
+    }
 
     private int getRandomNoteBackgroundColor() {
         List<Integer> colorCode = new ArrayList<>();
@@ -104,19 +103,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         colorCode.add(R.color.bgcolor6);
         colorCode.add(R.color.bgcolor7);
 
-        Random random = new Random();
+        random = new Random();
         int randomColorCode = random.nextInt(colorCode.size());
         return colorCode.get(randomColorCode);
-    }
-
-    @Override
-    public int getItemCount() {
-        return listNote.size();
-    }
-
-    public void fiteredNoteList(List<Note> fiteredNoteList) {
-        listNote = fiteredNoteList;
-        notifyDataSetChanged();
     }
 }
 

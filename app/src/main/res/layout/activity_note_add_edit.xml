@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/black"
+        android:background="@color/white"
         tools:context=".AddEditNote">
 
     <androidx.appcompat.widget.Toolbar android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
@@ -18,28 +18,31 @@
                        android:padding="8dp"
                        android:background="@android:color/transparent"
                        android:layout_alignParentEnd="true">
-
             </ImageView>
-
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/edt_title"
               android:hint="@string/title"
-              android:textColorHint="@color/white"
+              android:textColorHint="@color/grey"
               android:padding="8dp"
+              android:fontFamily="@font/open_sans_medium"
               android:textStyle="bold"
-              android:textColor="@color/white"
-              android:textSize="20dp"
+              android:backgroundTint="@color/tint"
+              android:textColor="@color/black"
+              android:textSize="20sp"
               android:singleLine="true">
     </EditText>
 
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
               android:hint="@string/content"
-              android:padding="8dp"
-              android:textColor="@color/white"
+              android:padding="8sp"
+              android:fontFamily="@font/open_sans_regular"
+              android:textColor="@color/black"
               android:textStyle="normal"
-              android:textColorHint="@color/white"
+              android:backgroundTint="@color/tint"
+              android:textColorHint="@color/grey"
               android:id="@+id/edt_content">
 
     </EditText>
