@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace 'com.thinnm00.securenotes'
+    compileSdk 30
+    compileSdk 31
+    compileSdk 32
+    compileSdk 33
     compileSdk 34
 
     defaultConfig {

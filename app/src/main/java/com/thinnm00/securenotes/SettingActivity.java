@@ -1,10 +1,15 @@
 package com.thinnm00.securenotes;
 
+import android.app.KeyguardManager;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.widget.CompoundButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -17,6 +22,8 @@ public class SettingActivity extends AppCompatActivity {
     public String KEY_BIOMETRIC_FINGERPRINT = "isEnableFingerPrint";
     public String KEY_BIOMETRIC_FACEID = "isEnableFaceId";
     private BiometricPrompt biometricPrompt;
+
+    private static final int MY_PERMISSIONS_REQUEST_USE_BIOMETRIC = 100;
 
     boolean isEnableBiometric;
 
@@ -53,6 +60,7 @@ public class SettingActivity extends AppCompatActivity {
         biometricFingerPrintSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 // Show biometric prompt
+
                 showBiometricPrompt();
                 sharedPreferences.edit().putBoolean(KEY_BIOMETRIC_FINGERPRINT, true).apply();
             } else {
@@ -81,5 +89,22 @@ public class SettingActivity extends AppCompatActivity {
 
         biometricPrompt.authenticate(promptInfo);
     }
+
+//    private void checkFingerprintPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.USE_FINGERPRINT},
+//                        MY_PERMISSIONS_REQUEST_USE_FINGERPRINT);
+//            } else {
+//                // Quyền đã được cấp, thực hiện các hành động liên quan đến vân tay ở đây
+//                // Ví dụ: initializeFingerprint();
+//            }
+//        } else {
+//            // Thiết bị không hỗ trợ vân tay hoặc không đạt yêu cầu phiên bản SDK
+//            Toast.makeText(this, "Thiết bị không hỗ trợ vân tay", Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
 }
