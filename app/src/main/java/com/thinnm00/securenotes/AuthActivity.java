@@ -36,16 +36,16 @@ public class AuthActivity extends AppCompatActivity {
 
         //if not setting
         if (!sharedPreferences.contains(KEY_BIOMETRIC_FINGERPRINT)) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            redirectToMainActivity();
+            finish();
             return;
         }
 
         isEnableBiometric = sharedPreferences.getBoolean(KEY_BIOMETRIC_FINGERPRINT, false);
         //if setting but not enable
         if (!isEnableBiometric) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            redirectToMainActivity();
+            finish();
             return;
         }
         //  else enable
@@ -92,15 +92,16 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
-//        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-//                .setTitle("please authenticate to access app!")
-//                .setConfirmationRequired(true)
-//                .setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
-//                .build();
-
         showBiometricPrompt();
 
     }
+
+    private void redirectToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
 
     private void showBiometricPrompt() {
         BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
