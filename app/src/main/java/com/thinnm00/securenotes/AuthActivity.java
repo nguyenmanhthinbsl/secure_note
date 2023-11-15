@@ -25,7 +25,7 @@ public class AuthActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREF_NAME = "BiometricsSetting";
     private final static String KEY_BIOMETRIC_FINGERPRINT = "isEnableFingerPrint";
-    public String KEY_BIOMETRIC_FACEID = "isEnableFaceId";
+//    public String KEY_BIOMETRIC_FACEID = "isEnableFaceId";
     boolean isEnableBiometric;
 
     @Override
@@ -52,14 +52,25 @@ public class AuthActivity extends AppCompatActivity {
         else {
             BiometricManager biometricManager = BiometricManager.from(this);
             switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | BIOMETRIC_WEAK)) {
+                // Thiết bị có thể hoạt động với xác thực sinh trắc học.
                 case BiometricManager.BIOMETRIC_SUCCESS:
+                    Toast.makeText(this, "Biometric authentication success!", Toast.LENGTH_SHORT).show();
                     break;
+
+                // Không có tính năng sinh trắc học nào có sẵn trên thiết bị này.
                 case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
                     Toast.makeText(this, "Hardware device not support biometric!", Toast.LENGTH_SHORT).show();
                     break;
+
+                //Các tính năng sinh trắc học hiện không khả dụng trong thiết bị.
                 case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
                     Toast.makeText(this, "Biometrics not available!", Toast.LENGTH_SHORT).show();
                     break;
+                //Người dùng không liên kết bất kỳ thông tin sinh trắc học nào trong thiết bị.
+                case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                    Toast.makeText(this, "Biometrics system not enable!", Toast.LENGTH_SHORT).show();
+                    break;
+
                 default:
                     Toast.makeText(this, "Biometrics not available!", Toast.LENGTH_SHORT).show();
                     break;
@@ -67,15 +78,19 @@ public class AuthActivity extends AppCompatActivity {
 
         }
 
+        // create new executor to run biometric prompt in main thread
         executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(AuthActivity.this,
                 executor, new BiometricPrompt.AuthenticationCallback() {
+
+            // when error
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(), "Something went wrong! : " + errString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Authentication error! : " + errString, Toast.LENGTH_SHORT).show();
             }
 
+            // when auth success
             @Override
             public void onAuthenticationSucceeded(
                     @NonNull BiometricPrompt.AuthenticationResult result) {
@@ -85,6 +100,7 @@ public class AuthActivity extends AppCompatActivity {
                         "Authentication success!", Toast.LENGTH_SHORT).show();
             }
 
+            // when auth fail
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
@@ -92,6 +108,7 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
+        // hiện prompt xác thực vân  tay
         showBiometricPrompt();
 
     }
@@ -103,6 +120,14 @@ public class AuthActivity extends AppCompatActivity {
     }
 
 
+    /*
+        prompt infor: thiết lập thông tin prompt:
+            title - tên tiêu đề prompt
+            subtitle - tên chi tiết
+            negativeButtonText - nút back
+            build() -> tạo
+
+     */
     private void showBiometricPrompt() {
         BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric Authentication")

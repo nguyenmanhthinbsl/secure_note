@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class AddEditNote extends AppCompatActivity {
 
-    private static final String MSG_EMPTY_TITLE = "Title không được để trống!";
+    private static final String MSG_EMPTY_TITLE = "Title can be empty!";
     EditText edtTitle;
     EditText edtContent;
     ImageView imgviewSave;

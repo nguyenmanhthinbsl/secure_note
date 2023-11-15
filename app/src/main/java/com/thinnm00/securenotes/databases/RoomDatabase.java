@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.thinnm00.securenotes.models.Note;
 
 @Database(entities = {Note.class}, version = 1, exportSchema = true)
-public abstract class   RoomDatabase extends androidx.room.RoomDatabase {
+public abstract class RoomDatabase extends androidx.room.RoomDatabase {
 
     private static RoomDatabase database;
     private static String DB_NAME = "db_secure_note";
@@ -21,7 +21,6 @@ public abstract class   RoomDatabase extends androidx.room.RoomDatabase {
                     .fallbackToDestructiveMigration()
                     .build();
         }
-
         return database;
     }
 

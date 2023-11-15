@@ -71,29 +71,27 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     private void setupBottomNavigationBar() {
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        // Handle navigation item clicks here
-                        switch (item.getItemId()) {
-                            case R.id.action_home:
-                                reloadMain();
-                                break;
-                            case R.id.action_add:
-                                Intent intent = new Intent(MainActivity.this, AddEditNote.class);
-                                startActivityForResult(intent, REQUEST_ADD_NOTE);
-                                break;
-                            case R.id.action_setting:
-                                Toast.makeText(MainActivity.this, "ok1", Toast.LENGTH_SHORT).show();
-                                Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
-                                startActivity(intentSetting);
-                                break;
-                        }
-                        return true;
+                item -> {
+                    // Handle navigation item clicks here
+                    switch (item.getItemId()) {
+                        case R.id.action_home:
+                            reloadMain();
+                            break;
+                        case R.id.action_add:
+                            Intent intent = new Intent(MainActivity.this, AddEditNote.class);
+                            startActivityForResult(intent, REQUEST_ADD_NOTE);
+                            break;
+                        case R.id.action_setting:
+                            //Toast.makeText(MainActivity.this, "ok1", Toast.LENGTH_SHORT).show();
+                            Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
+                            startActivity(intentSetting);
+                            break;
                     }
+                    return true;
                 });
 
         // Set the default selected item
