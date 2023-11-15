@@ -204,11 +204,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return false;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (backPressedCount == 1) {
-            finish();
+            finishAffinity();
         } else {
             Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
             backPressedCount++;
